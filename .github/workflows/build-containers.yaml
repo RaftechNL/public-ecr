@@ -26,7 +26,7 @@ jobs:
           build-dockerfile: ''
           build-context: "./platform/tooling/aws-cli-v2"
           aws-account-id: ${{ secrets.RAFTECH_AWS_ACCOUNT_ID }}
-          ecr-repository: "platform/tooling"
+          ecr-repository: "public.ecr.aws/p8o7f1g4/platform/tooling"
           ecr-registry-type: "public"
           role-to-assume: "arn:aws:iam::${{ secrets.RAFTECH_AWS_ACCOUNT_ID }}:role/GithubActionsRole"
           role-session-name: "raftech-public-ecr-gha"
