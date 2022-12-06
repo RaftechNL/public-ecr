@@ -13,7 +13,7 @@ RUN curl -L https://github.com/suzuki-shunsuke/tfcmt/releases/download/v4.0.0/tf
       && chmod +x /usr/local/bin/tfcmt
 
 # Install github-comment
-RUN curl -L https://github.com/suzuki-shunsuke/github-comment/releases/download/v5.0.0/github-comment_5.0.0_linux_arm64.tar.gz > /usr/local/bin/tfcmt \
+RUN curl -L https://github.com/suzuki-shunsuke/github-comment/releases/download/v5.0.0/github-comment_5.0.0_linux_amd64.tar.gz > /usr/local/bin/tfcmt \
       && chmod +x /usr/local/bin/tfcmt
 
 ENTRYPOINT ["/bin/bash"]
