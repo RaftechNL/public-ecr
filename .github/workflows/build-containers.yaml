@@ -1,0 +1,36 @@
+name: build-containers
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write # required for OIDC
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: 'composite:build-container-kaniko'
+        uses: ./.github/workflows/composite-actions/local-kaniko
+        id: build-container
+        with:
+          metadata-flavor: |
+            latest=false
+          build-dockerfile: ''
+          build-context: "./platform/tooling/aws-cli-v2"
+          aws-account-id: ${{ secrets.RAFTECH_AWS_ACCOUNT_ID }}
+          ecr-repository: "platform/tooling"
+          ecr-registry-type: "public"
+          role-to-assume: "arn:aws:iam::${{ secrets.RAFTECH_AWS_ACCOUNT_ID }}:role/GithubActionsRole"
+          role-session-name: "raftech-public-ecr-gha"
+          aws-region: "us-east-1"
+          
+
+          
