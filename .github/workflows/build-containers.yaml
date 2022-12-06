@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: 'composite:build-container-kaniko'
-        uses: RaftechNL/composite-github-actions/aws-container-build-ecr@v0.0.2
+        uses: RaftechNL/composite-github-actions/aws-container-build-ecr@v0.0.3
         id: build-container
         with:
           metadata-flavor: |
