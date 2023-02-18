@@ -24,7 +24,7 @@ FROM alpine:3.13
 
 ARG KUBECTL_VERSION=1.24.0
 
-RUN apk --no-cache add groff curl bash
+RUN apk --no-cache add groff curl bash jq yq
 RUN apk add --no-cache --update bind-tools
 
 # Install kubectl
