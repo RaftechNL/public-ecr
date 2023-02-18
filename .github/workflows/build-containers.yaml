@@ -16,6 +16,7 @@ jobs:
   build-matrix:
     runs-on: ubuntu-latest  
     strategy:
+      fail-fast: false
       matrix:
         image: ["aws-cli-v2", "k8s-toolkit-diag", "k8s-toolkit-set-1", "k8s-toolkit-set-2", "k8s-toolkit-set-3", "terraform-tfcmt"]
     steps:
@@ -40,7 +41,7 @@ jobs:
         id: metadata
         uses: docker/metadata-action@v4.1.1
         with:
-          images: ${{ steps.login-ecr.outputs.registry }}/p8o7f1g4/platform
+          images: ${{ steps.login-ecr.outputs.registry }}/p8o7f1g4/platform/${{ matrix.image }}
           tags: |
             # type=ref,event=branch
             # type=ref,event=pr
