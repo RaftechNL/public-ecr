@@ -41,7 +41,7 @@ jobs:
         id: metadata
         uses: docker/metadata-action@v4.1.1
         with:
-          images: ${{ steps.login-ecr.outputs.registry }}/raftech/platform
+          images: ${{ steps.login-ecr.outputs.registry }}/p8o7f1g4/platform
           tags: |
             type=ref,event=branch
             type=ref,event=pr
