@@ -12,15 +12,14 @@ permissions:
   id-token: write # required for OIDC
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+
+  build-matrix:
+    runs-on: ubuntu-latest  
+    strategy:
+      matrix:
+        image: ["aws-cli-v2", "k8s-toolkit-diag", "k8s-toolkit-set-1", "k8s-toolkit-set-2", "k8s-toolkit-set-3", "terraform-tfcmt"]
     steps:
       - uses: actions/checkout@v3
-
-      - name: "cicd:inject-slug-variables"
-        uses: rlespinasse/github-slug-action@v4
-        with:
-          prefix: CI_
 
       - name: "aws:configure-credentials"
         uses: aws-actions/configure-aws-credentials@v1
@@ -43,8 +42,8 @@ jobs:
         with:
           images: ${{ steps.login-ecr.outputs.registry }}/p8o7f1g4/platform
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
+            # type=ref,event=branch
+            # type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=sha
@@ -56,4 +55,6 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           cache: false
-          context: "./platform/aws-cli-v2"
+          context: "./platform/${{ matrix.image }}"
+
+
