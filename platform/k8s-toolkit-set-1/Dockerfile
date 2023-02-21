@@ -5,7 +5,7 @@ ARG KUBECTL_VERSION=1.24.0
 ARG KUSTOMIZE_VERSION=v4.5.7
 ENV KAPP_VERSION=v0.54.0
 
-RUN apk add --update --no-cache curl ca-certificates bash git jq 
+RUN apk add --update --no-cache curl bash git jq yq
 
 # Install kapp 
 RUN curl -L https://github.com/vmware-tanzu/carvel-kapp/releases/download/${KAPP_VERSION}/kapp-linux-amd64 > /usr/local/bin/kapp \

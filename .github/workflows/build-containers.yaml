@@ -12,25 +12,50 @@ permissions:
   id-token: write # required for OIDC
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+
+  build-matrix:
+    runs-on: ubuntu-latest  
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ["aws-cli-v2", "k8s-toolkit-diag", "k8s-toolkit-set-1", "k8s-toolkit-set-2", "k8s-toolkit-set-3", "terraform-tfcmt"]
     steps:
       - uses: actions/checkout@v3
-      
-      - name: 'composite:build-container-kaniko'
-        uses: RaftechNL/composite-github-actions/aws-container-build-ecr@v0.0.3
-        id: build-container
+
+      - name: "aws:configure-credentials"
+        uses: aws-actions/configure-aws-credentials@v1
+        id: aws-credentials
         with:
-          metadata-flavor: |
-            latest=false
-          build-dockerfile: ''
-          build-context: "./platform/tooling/aws-cli-v2"
-          aws-account-id: ${{ secrets.RAFTECH_AWS_ACCOUNT_ID }}
-          ecr-repository: "p8o7f1g4/platform/tooling"
-          ecr-registry-type: "public"
           role-to-assume: "arn:aws:iam::${{ secrets.RAFTECH_AWS_ACCOUNT_ID }}:role/GithubActionsRole"
           role-session-name: "raftech-public-ecr-gha"
           aws-region: "us-east-1"
-          
+          mask-aws-account-id: no
 
-          
+      - name: "aws:login-to-ecr"
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry-type: "public"
+
+      - name: "docker:setup-metadata"
+        id: metadata
+        uses: docker/metadata-action@v4.1.1
+        with:
+          images: ${{ steps.login-ecr.outputs.registry }}/p8o7f1g4/platform/${{ matrix.image }}
+          tags: |
+            # type=ref,event=branch
+            # type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+
+      - name: "kaniko:build-and-push-image"
+        uses: int128/kaniko-action@v1.14.0
+        with:
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          cache: false
+          context: "./platform/${{ matrix.image }}"
+
+
