@@ -27,9 +27,6 @@ Contributions are always welcome!
 - [@rafpe](https://www.github.com/rafpe)
 
 
-aws-cli-v2
-
-
 
 
 
