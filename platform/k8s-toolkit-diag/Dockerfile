@@ -7,6 +7,7 @@ RUN set -ex; \
     build-base libffi-dev cmake
 
 ENV AWS_CLI_VERSION=2.9.4
+
 RUN set -eux; \
     mkdir /aws; \
     git clone --single-branch --depth 1 -b ${AWS_CLI_VERSION} https://github.com/aws/aws-cli.git /aws; \
@@ -23,14 +24,25 @@ RUN set -ex; \
 FROM alpine:3.13
 
 ARG KUBECTL_VERSION=1.24.0
+ARG JQ_VERSION=1.6
+ARG YQ_VERSION=v4.31.2
 
-RUN apk --no-cache add groff curl bash jq yq
+RUN apk add --no-cache groff curl bash wget
 RUN apk add --no-cache --update bind-tools
 
 # Install kubectl
 RUN curl -sLO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
     mv kubectl /usr/bin/kubectl && \
     chmod +x /usr/bin/kubectl
+
+# Install jq
+RUN curl -sLO https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64 && \
+    mv jq-linux64 /usr/local/bin/jq && \
+    chmod +x /usr/local/bin/jq
+
+# Install yq
+RUN wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64.tar.gz -O - |\
+    tar xz && mv yq_linux_amd64 /usr/local/bin/yq
 
 COPY --from=installer /usr/local/aws-cli/ /usr/local/aws-cli/
 COPY --from=installer /aws-cli-bin/ /usr/local/bin/    
