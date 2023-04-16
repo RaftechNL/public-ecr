@@ -1,14 +1,10 @@
-FROM alpine:3.13
+FROM bitnami/minideb:bullseye
 
-ARG KAPP_VERSION=v0.54.0
+ARG KAPP_VERSION=v0.55.0
 ARG JQ_VERSION=1.6
-ARG YQ_VERSION=v4.31.2
-ARG GOMPLATE_VERSION=v4.31.2
+ARG QBCONF_VERSION=0.15.0
 
-RUN apk add --update --no-cache curl bash git wget
-
-# Install gomplate
-COPY --from=hairyhenderson/gomplate:stable /gomplate /bin/gomplate
+RUN install_packages curl ca-certificates git
 
 # Install kapp 
 RUN curl -L https://github.com/vmware-tanzu/carvel-kapp/releases/download/${KAPP_VERSION}/kapp-linux-amd64 > /usr/local/bin/kapp \
@@ -19,8 +15,14 @@ RUN curl -sLO https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/
     mv jq-linux64 /usr/local/bin/jq && \
     chmod +x /usr/local/bin/jq
 
-# Install yq
-RUN wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64.tar.gz -O - |\
-    tar xz && mv yq_linux_amd64 /usr/local/bin/yq
+# Install qbconf
+RUN curl -sSL https://github.com/RaftechNL/qbconf/releases/download/${QBCONF_VERSION}/qbconf_linux_amd64.tar.gz | tar -xz && \
+    mv qbconf_linux_amd64 /usr/local/bin/qbconf
+
+# Install yq 4.33.3
+COPY --from=mikefarah/yq@sha256:11da99074a0a985650669ab49b392733a8439bf31291e64aa6d012f7a5d98dfd /usr/bin/yq /usr/bin/yq
+
+# Install gomplate
+COPY --from=hairyhenderson/gomplate:stable /gomplate /bin/gomplate
 
 ENTRYPOINT ["/bin/bash"]
