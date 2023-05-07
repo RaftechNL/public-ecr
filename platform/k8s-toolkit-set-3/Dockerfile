@@ -2,7 +2,7 @@ FROM bitnami/minideb:bullseye
 
 ARG KAPP_VERSION=v0.55.0
 ARG JQ_VERSION=1.6
-ARG QBCONF_VERSION=0.15.0
+ARG QBCONF_VERSION=0.16.0
 
 RUN install_packages curl ca-certificates git
 
