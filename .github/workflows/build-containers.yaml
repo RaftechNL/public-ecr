@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ["aws-cli-v2", "k8s-toolkit-diag", "k8s-toolkit-set-1", "k8s-toolkit-set-2", "k8s-toolkit-set-3", "terraform-tfcmt"]
+        image: ["aws-cli-v2", "k8s-toolkit-diag", "k8s-toolkit-set-1", "k8s-toolkit-set-2", "k8s-toolkit-set-3", "terraform-tfcmt","terraform-cicd"]
     steps:
       - uses: actions/checkout@v3
 
