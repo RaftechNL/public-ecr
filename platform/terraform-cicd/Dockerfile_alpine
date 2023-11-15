@@ -1,4 +1,4 @@
-FROM debian:stable-slim
+FROM alpine:3.13
 
 ARG TERRAFORM_DEFAULT_VERSION=1.6.4
 ARG JQ_VERSION=1.7
@@ -7,7 +7,8 @@ ARG TFCMT_VERSION=v4.7.1
 ARG GITHUBCOMMENT_VERSION=6.0.2
 ARG QBCONF_VERSION=1.0.0
 
-RUN apt-get update && apt install curl -y -q
+RUN apk add --update --no-cache curl ca-certificates bash libc6-compat
+
 
 # Install jq
 RUN curl -sLO https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64 && \
