@@ -7,7 +7,7 @@ ARG TFCMT_VERSION=v4.7.1
 ARG GITHUBCOMMENT_VERSION=6.0.2
 ARG QBCONF_VERSION=1.0.0
 
-RUN apt-get update && apt install curl -y -q
+RUN apt-get update && apt install curl vim git -y -q
 
 # Install jq
 RUN curl -sLO https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64 && \
@@ -23,6 +23,8 @@ COPY --from=mikefarah/yq@sha256:11da99074a0a985650669ab49b392733a8439bf31291e64a
 
 # Install gomplate
 COPY --from=hairyhenderson/gomplate:stable /gomplate /bin/gomplate
+
+COPY .jq /root/.jq 
 
 # Install tfcmt
 RUN curl -sSL  https://github.com/suzuki-shunsuke/tfcmt/releases/download/${TFCMT_VERSION}/tfcmt_linux_amd64.tar.gz | tar xvz -C /tmp \
