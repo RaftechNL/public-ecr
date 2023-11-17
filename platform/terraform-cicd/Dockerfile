@@ -20,7 +20,8 @@ RUN set -ex; \
     ./aws/install --bin-dir /aws-cli-bin; \
     /aws-cli-bin/aws --version
 
-FROM debian:stable-slim
+# FROM debian:stable-slim
+FROM --platform=linux/amd64 bitnami/minideb:bullseye
 
 ARG TERRAFORM_DEFAULT_VERSION=1.6.4
 ARG JQ_VERSION=1.7
@@ -28,9 +29,12 @@ ARG YQ_VERSION=v4.35.2
 ARG TFCMT_VERSION=v4.7.1
 ARG GITHUBCOMMENT_VERSION=6.0.2
 ARG QBCONF_VERSION=1.0.0
-ARG TFMIGRATE_VERSION=${TFMIGRATE_VERSION}
+ARG TFMIGRATE_VERSION=0.3.19
+ARG TERRAFILE_VERSION=0.8
 
-RUN apt-get update && apt install curl vim git unzip groff -y -q
+RUN apt-get update && apt install curl vim git groff -y -q \
+    && apt-get clean \
+    && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
 # Install jq
 RUN curl -sLO https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64 && \
@@ -57,6 +61,10 @@ RUN curl -L https://raw.githubusercontent.com/warrensbox/terraform-switcher/rele
 RUN curl -sSL  https://github.com/minamijoyo/tfmigrate/releases/download/v${TFMIGRATE_VERSION}/tfmigrate_${TFMIGRATE_VERSION}_linux_amd64.tar.gz | tar xvz -C /tmp \
       && mv /tmp/tfmigrate usr/local/bin/tfmigrate \
       && chmod +x /usr/local/bin/tfmigrate
+
+RUN curl -sSL https://github.com/coretech/terrafile/releases/download/v${TERRAFILE_VERSION}/terrafile_${TERRAFILE_VERSION}_Linux_x86_64.tar.gz | tar xvz -C /tmp \
+      && mv /tmp/terrafile usr/local/bin/terrafile \
+      && chmod +x /usr/local/bin/terrafile
 
 COPY --from=installer /usr/local/aws-cli/ /usr/local/aws-cli/
 COPY --from=installer /aws-cli-bin/ /usr/local/bin/    
