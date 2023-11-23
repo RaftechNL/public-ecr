@@ -31,6 +31,7 @@ ARG GITHUBCOMMENT_VERSION=6.0.2
 ARG QBCONF_VERSION=1.0.0
 ARG TFMIGRATE_VERSION=0.3.19
 ARG TERRAFILE_VERSION=0.8
+ARG YOR_VERSION=0.1.185
 
 RUN apt-get update && apt install curl vim git groff -y -q \
     && apt-get clean \
@@ -65,6 +66,10 @@ RUN curl -sSL  https://github.com/minamijoyo/tfmigrate/releases/download/v${TFMI
 RUN curl -sSL https://github.com/coretech/terrafile/releases/download/v${TERRAFILE_VERSION}/terrafile_${TERRAFILE_VERSION}_Linux_x86_64.tar.gz | tar xvz -C /tmp \
       && mv /tmp/terrafile usr/local/bin/terrafile \
       && chmod +x /usr/local/bin/terrafile
+
+RUN curl -sSL https://github.com/bridgecrewio/yor/releases/download/${YOR_VERSION}/yor_${YOR_VERSION}_linux_amd64.tar.gz | tar xvz -C /tmp \
+      && mv /tmp/yor usr/local/bin/yor \
+      && chmod +x /usr/local/bin/yor
 
 COPY --from=installer /usr/local/aws-cli/ /usr/local/aws-cli/
 COPY --from=installer /aws-cli-bin/ /usr/local/bin/    
