@@ -27,7 +27,7 @@ ARG TERRAFORM_DEFAULT_VERSION=1.6.4
 ARG JQ_VERSION=1.7
 ARG YQ_VERSION=v4.35.2
 ARG TFCMT_VERSION=v4.7.1
-ARG GITHUBCOMMENT_VERSION=6.0.2
+ARG GITHUBCOMMENT_VERSION=6.0.3
 ARG QBCONF_VERSION=1.0.0
 ARG TFMIGRATE_VERSION=0.3.19
 ARG TERRAFILE_VERSION=0.8
@@ -70,6 +70,10 @@ RUN curl -sSL https://github.com/coretech/terrafile/releases/download/v${TERRAFI
 RUN curl -sSL https://github.com/bridgecrewio/yor/releases/download/${YOR_VERSION}/yor_${YOR_VERSION}_linux_amd64.tar.gz | tar xvz -C /tmp \
       && mv /tmp/yor usr/local/bin/yor \
       && chmod +x /usr/local/bin/yor
+
+RUN curl -sSL https://github.com/suzuki-shunsuke/github-comment/releases/download/v${GITHUBCOMMENT_VERSION}/github-comment_${GITHUBCOMMENT_VERSION}_linux_amd64.tar.gz | tar xvz -C /tmp \
+      && mv /tmp/github-comment usr/local/bin/github-comment \
+      && chmod +x /usr/local/bin/github-comment
 
 COPY --from=installer /usr/local/aws-cli/ /usr/local/aws-cli/
 COPY --from=installer /aws-cli-bin/ /usr/local/bin/    
