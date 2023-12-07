@@ -21,7 +21,7 @@ RUN set -ex; \
     /aws-cli-bin/aws --version
 
 # FROM debian:stable-slim
-FROM --platform=linux/amd64 bitnami/minideb:bullseye
+FROM bitnami/minideb:bullseye
 
 ARG TERRAFORM_DEFAULT_VERSION=1.6.4
 ARG JQ_VERSION=1.7
@@ -33,7 +33,13 @@ ARG TFMIGRATE_VERSION=0.3.19
 ARG TERRAFILE_VERSION=0.8
 ARG YOR_VERSION=0.1.185
 
-RUN apt-get update && apt install curl vim git groff -y -q \
+RUN apt update \
+    && apt install -y -q curl vim git groff gpg
+
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && apt update \
+    && apt install -y -q gh \
     && apt-get clean \
     && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
