@@ -20,19 +20,19 @@ jobs:
     outputs:    
       packages: ${{ steps.filter.outputs.changes }}
     steps:
-    # For pull requests it's not necessary to checkout the code
-    - uses: dorny/paths-filter@v3
-      id: filter
-      with:
-        filters: |
-          actions-runner-iac: platform/actions-runner-iac
-          aws-cli-v2: platform/aws-cli-v2
-          k8s-toolkit-diag: platform/k8s-toolkit-diag
-          k8s-toolkit-set-1: platform/k8s-toolkit-set-1
-          k8s-toolkit-set-2: platform/k8s-toolkit-set-2
-          k8s-toolkit-set-3: platform/k8s-toolkit-set-3
-          terraform-tfcmt: platform/terraform-tfcmt
-          terraform-cicd: platform/terraform-cicd
+      - uses: actions/checkout@v4      
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            actions-runner-iac: platform/actions-runner-iac
+            aws-cli-v2: platform/aws-cli-v2
+            k8s-toolkit-diag: platform/k8s-toolkit-diag
+            k8s-toolkit-set-1: platform/k8s-toolkit-set-1
+            k8s-toolkit-set-2: platform/k8s-toolkit-set-2
+            k8s-toolkit-set-3: platform/k8s-toolkit-set-3
+            terraform-tfcmt: platform/terraform-tfcmt
+            terraform-cicd: platform/terraform-cicd
 
   build-matrix:
     runs-on: ubuntu-latest  
