@@ -23,9 +23,9 @@ RUN set -ex; \
 
 FROM alpine:3.13
 
-ARG KUBECTL_VERSION=1.24.0
-ARG JQ_VERSION=1.6
-ARG YQ_VERSION=v4.31.2
+ARG KUBECTL_VERSION=1.31.0
+ARG JQ_VERSION=1.7.1
+ARG YQ_VERSION=v4.44.3
 
 RUN apk add --no-cache groff curl bash wget
 RUN apk add --no-cache --update bind-tools
