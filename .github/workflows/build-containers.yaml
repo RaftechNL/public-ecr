@@ -12,35 +12,12 @@ permissions:
   id-token: write # required for OIDC
 
 jobs:
-
-  changes:
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
-    outputs:    
-      packages: ${{ steps.filter.outputs.changes }}
-    steps:
-      - uses: actions/checkout@v4      
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            actions-runner-iac: platform/actions-runner-iac
-            aws-cli-v2: platform/aws-cli-v2
-            k8s-toolkit-diag: platform/k8s-toolkit-diag
-            k8s-toolkit-set-1: platform/k8s-toolkit-set-1
-            k8s-toolkit-set-2: platform/k8s-toolkit-set-2
-            k8s-toolkit-set-3: platform/k8s-toolkit-set-3
-            terraform-tfcmt: platform/terraform-tfcmt
-            terraform-cicd: platform/terraform-cicd
-
   build-matrix:
     runs-on: ubuntu-latest  
-    needs: changes
     strategy:
       fail-fast: false
       matrix:
-        image: ${{ fromJSON(needs.changes.outputs.packages) }}
+        image: ["actions-runner-iac","aws-cli-v2", "k8s-toolkit-diag", "k8s-toolkit-set-1", "k8s-toolkit-set-2", "k8s-toolkit-set-3", "terraform-tfcmt","terraform-cicd"]
     steps:
       - uses: actions/checkout@v3
 
@@ -73,8 +50,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=sha
-
-
+            
       - 
         name: docker::build-and-push
         id: push
